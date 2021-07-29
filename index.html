@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Comics Webpage</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <h1>Comics Heaven</h1>
+
+</head>
+
+<body>
+    <div class="alertError rounded-md bg-red-50 hidden p-4" role="alert" id="errorAlert">
+        <p class="text-sm font-medium" id="errorMsg"></p>
+
+    </div>
+    <div class="search-container">
+        <form id="myForm">
+            View comic number<label class="input">
+                <input id="input__field" type="text" placeholder="Enter comic #" />
+            </label>
+            <br>
+            <br>
+            <label for="numOfComicsToDisplay">Number of comics to display:</label>
+            <select name="numOfComicsToDisplay" id="numOfComicsToDisplay">
+                <option value="1">1</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+            </select>
+            <br>
+            <br>
+            <input type="submit" id="quickSearch" value="Submit"></input>
+        </form>
+
+    </div>
+
+    <center>
+        <button class="button1" id="prevButton">
+            < Prev</button>
+                <button class="button1" id="randomButton">Random</button>
+                <button class="button1" id="nextButton">Next ></button>
+                <div class="loader"></div>
+                <div class="container" style="width: 100%" ">
+       
+      
+        <div class=" num0 box ">
+            <img id=" image0" />
+                </div>
+                <div class="num1 box ">
+                    <img id="image1" />
+                </div>
+                <div class="num2 box ">
+                    <img id="image2" />
+                </div>
+                <div class="num3 box ">
+                    <img id="image3" />
+                </div>
+                <div class="num4 box ">
+                    <img id="image4" />
+                </div>
+
+
+    </center>
+
+    <script src="script.js "></script>
+</body>
+
+</html>
