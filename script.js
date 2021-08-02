@@ -8,18 +8,23 @@ const form = document.querySelector(`#myForm`);
 const comicNumToSearch = document.querySelector(`#input__field`);
 const numberToDisplay = document.querySelector(`#numOfComicsToDisplay`);
 
-
+//Submitting the form to search for a specific comic 
 form.addEventListener("submit", function (event) {
     event.preventDefault();
-    if (
+    if (comicNumToSearch.value === '') { //if input in absent
+        document.querySelector("#errorAlert").classList.remove("hidden");
+        document.querySelector(
+            "#errorMsg"
+        ).innerHTML = `Comic number cannot be empty. Please pick a number between 1 and ${latestComicNumber}`;
+
+    } else if (
         comicNumToSearch.value > latestComicNumber ||
-        comicNumToSearch.value < 1
-    ) {
+        comicNumToSearch.value < 1) { //invalid comic number which is out of range
         document.querySelector("#errorAlert").classList.remove("hidden");
         document.querySelector(
             "#errorMsg"
         ).innerHTML = `Comic Number ${comicNumToSearch.value} Does Not Exist; Please pick a number between 1 and ${latestComicNumber}`;
-    } else {
+    } else { //valid comic number
         initComics(comicNumToSearch.value, numberToDisplay.value);
     }
 });
@@ -61,8 +66,13 @@ prevButton.addEventListener("click", function (event) {
 
 const randomButton = document.querySelector(`#randomButton`);
 randomButton.addEventListener("click", () =>
-    initComics(Number(Math.floor(Math.random() * 2488) + 1), currentDisplay)
+    initComics(Number(Math.floor(Math.random() * latestComicNumber) + 1), currentDisplay)
 );
+
+function onClick(element) {
+    document.getElementById("img01").src = element.src;
+    document.getElementById("modal01").style.display = "block";
+}
 
 function clearDivs() {
     const div = document.querySelectorAll("div[class *= 'num']");
@@ -77,55 +87,23 @@ async function initComics(comicNumber, comicsToShowAtATime) {
     document.querySelector("#errorMsg").innerHTML = "";
     document.querySelector("#errorAlert").classList.add("hidden");
     clearDivs();
-    currentDisplay = comicsToShowAtATime;
-    if (comicsToShowAtATime == 5) {
+    currentDisplay = comicsToShowAtATime; //currentDisplay refers to the number of comic shown each time eg. 1,3 or 5
+    if (comicsToShowAtATime == 5 || comicsToShowAtATime == 3) {
         let arr = [];
         currentComicNumber = comicNumber;
-        firstElementToRetrieve = comicNumber - 2;
+        const index = Math.floor(comicsToShowAtATime / 2);
+        firstElementToRetrieve = comicNumber - index;
         for (let k = 0; k < 5; k++) {
-            if (comicNumber - 2 + k <= latestComicNumber && comicNumber - 2 + k > 0) {
-                arr.push(comicNumber - 2 + k);
-            } else if (comicNumber - 2 + k > latestComicNumber) {
-                arr.push(Number(comicNumber) - 2 + k - Number(latestComicNumber));
-            } else if (comicNumber - 2 + k <= 0) {
-                arr.push(Number(comicNumber) - 2 + k + Number(latestComicNumber));
+            if (comicNumber - index + k <= latestComicNumber && comicNumber - index + k > 0) {
+                arr.push(comicNumber - index + k);
+            } else if (comicNumber - index + k > latestComicNumber) {
+                arr.push(Number(comicNumber) - index + k - Number(latestComicNumber));
+            } else if (comicNumber - index + k <= 0) {
+                arr.push(Number(comicNumber) - index + k + Number(latestComicNumber));
             }
         }
-
         for (let j = 0; j < comicsToShowAtATime; j++) {
             await Promise.resolve(getComic(arr[j], comicsToShowAtATime, j));
-        }
-    } else if (comicsToShowAtATime == 3) {
-        currentComicNumber = comicNumber;
-        let arr = [];
-        if (comicNumber == 1) {
-            arr.push(latestComicNumber);
-            arr.push(comicNumber);
-            arr.push(Number(comicNumber) + Number(1));
-
-            for (let i = 0; i < arr.length; i++) {
-                await Promise.resolve(getComic(arr[i], comicsToShowAtATime, i));
-            }
-
-        } else if (comicNumber == latestComicNumber) {
-            arr.push(latestComicNumber - Number(1));
-            arr.push(latestComicNumber);
-            arr.push(Number(1));
-            for (let i = 0; i < arr.length; i++) {
-                await Promise.resolve(getComic(arr[i], comicsToShowAtATime, i));
-            }
-
-        } else {
-            firstElementToRetrieve = comicNumber - 1;
-            currentComicNumber = comicNumber;
-
-            for (let i = 0; i < comicsToShowAtATime; i++) {
-                if (firstElementToRetrieve + i <= 2488) {
-                    await Promise.resolve(
-                        getComic(firstElementToRetrieve + i, comicsToShowAtATime, i)
-                    );
-                }
-            }
         }
     } else {
         currentComicNumber = comicNumber;
@@ -165,10 +143,11 @@ function getComic(comicNumber, numOfComicsDisplayed, number) {
         .then((comic) => {
             // console.log(comic);
             const comicRetrieved = document.querySelector(`.num${number}`);
-            comicRetrieved.innerHTML = `<h3 class="mt-6 text-gray-900 text-sm font-medium">  ${comic.title} </h3>
-      <h3>${comic.num}</h3>
+            comicRetrieved.innerHTML = `<h5 class="mt-6 text-gray-900 text-sm font-medium">  ${comic.title} </h5>
+      <h5>${comic.num}</h5>
       <img class="resize${numOfComicsDisplayed} id=${number}"
-        src="${comic.img}"
+        src="${comic.img}" style="" 
+        onclick="onClick(this)" class="w3-hover-opacity"
         alt="" />`;
         })
 
@@ -180,4 +159,4 @@ function getComic(comicNumber, numOfComicsDisplayed, number) {
 
 }
 
-initComics(1, 1);
+initComics(2, 3);
