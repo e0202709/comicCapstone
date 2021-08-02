@@ -11,11 +11,8 @@ const numberToDisplay = document.querySelector(`#numOfComicsToDisplay`);
 //Submitting the form to search for a specific comic 
 form.addEventListener("submit", function (event) {
     event.preventDefault();
-    if (comicNumToSearch.value === '') { //if input in absent
-        document.querySelector("#errorAlert").classList.remove("hidden");
-        document.querySelector(
-            "#errorMsg"
-        ).innerHTML = `Comic number cannot be empty. Please pick a number between 1 and ${latestComicNumber}`;
+    if (comicNumToSearch.value === '') { //if input in absent, use the currentComicNumber; so that users do not have to keep inputting
+        initComics(currentComicNumber, numberToDisplay.value);
 
     } else if (
         comicNumToSearch.value > latestComicNumber ||
@@ -27,6 +24,7 @@ form.addEventListener("submit", function (event) {
     } else { //valid comic number
         initComics(comicNumToSearch.value, numberToDisplay.value);
     }
+    comicNumToSearch.value = ''; //clear the comicToSearch value, for better user interface.
 });
 
 const nextButton = document.querySelector(`#nextButton`);
@@ -62,6 +60,24 @@ prevButton.addEventListener("click", function (event) {
             currentDisplay
         );
     }
+});
+
+const firstButton = document.querySelector(`#firstButton`);
+firstButton.addEventListener("click", function (event) {
+    const numToAdd = Math.floor(currentDisplay / 2);
+    initComics(
+        1 + numToAdd, currentDisplay
+    );
+
+});
+
+const lastButton = document.querySelector(`#lastButton`);
+lastButton.addEventListener("click", function (event) {
+    const numToSubtract = Math.floor(currentDisplay / 2);
+    initComics(
+        latestComicNumber - numToSubtract, currentDisplay
+    );
+
 });
 
 const randomButton = document.querySelector(`#randomButton`);
