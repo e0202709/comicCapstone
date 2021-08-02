@@ -50,6 +50,7 @@
 .container {
     /* display: flex; */
     margin: 0 auto;
+    position: relative;
     /* display: block; */
     /* text-align: center; */
     /* width: 100%; */
@@ -58,9 +59,10 @@
 
 .box {
     /* width: 20%; */
-    height: 100px;
+    /* height: 100px; */
     vertical-align:top !important;
     display: inline-block;
+    position: relative;
 }
 
 .resize5 {
