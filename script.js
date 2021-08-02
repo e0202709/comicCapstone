@@ -92,14 +92,34 @@ async function initComics(comicNumber, comicsToShowAtATime) {
         let arr = [];
         currentComicNumber = comicNumber;
         const index = Math.floor(comicsToShowAtATime / 2);
+        /*
+        firstElementToRetrieve depends on comicsToShowAtATime
+        eg: comicNumber = 100; comicsToShowAtATime is 5;firstElementToRetrieve would be 100-2 = 98
+        bc display 98,99,100,101,102
+        ------------------------------------------------------------------------------------------
+        eg: comicNumber = 100; comicsToShowAtATime is 5;firstElementToRetrieve would be 100-1= 99
+        bc display 99,100,101
+        */
         firstElementToRetrieve = comicNumber - index;
-        for (let k = 0; k < 5; k++) {
-            if (comicNumber - index + k <= latestComicNumber && comicNumber - index + k > 0) {
-                arr.push(comicNumber - index + k);
-            } else if (comicNumber - index + k > latestComicNumber) {
-                arr.push(Number(comicNumber) - index + k - Number(latestComicNumber));
-            } else if (comicNumber - index + k <= 0) {
-                arr.push(Number(comicNumber) - index + k + Number(latestComicNumber));
+        for (let k = 0; k < comicsToShowAtATime; k++) {
+            let comicNumToRetrieve = Number(comicNumber) - index + k;
+            //if comicNumToRetrieve is between 0 - latestComicNumber, we will add it into the arrary
+            if (comicNumToRetrieve <= latestComicNumber && comicNumToRetrieve > 0) {
+                arr.push(comicNumToRetrieve);
+            }
+            /* 
+               if comicNumToRetrieve is bigger than latestComicNumber, we would have to subtract it by the latest comic number
+               eg: latestComicNumber is 2488 and comicNumToRetrieve is 2489, we would have to retrieve comic 1, which is 2489-2488 
+            */
+            else if (comicNumToRetrieve > latestComicNumber) {
+                arr.push(comicNumToRetrieve - Number(latestComicNumber));
+            }
+            /* 
+                if comicNumToRetrieve is bigger than latestComicNumber, we would have to add it by the latest comic number
+                eg: latestComicNumber is 2488 and comicNumToRetrieve is 0, we would have to retrieve comic 2488, which is 0+2488 
+            */
+            else if (comicNumToRetrieve <= 0) {
+                arr.push(comicNumToRetrieve + Number(latestComicNumber));
             }
         }
         for (let j = 0; j < comicsToShowAtATime; j++) {
@@ -123,7 +143,6 @@ function getLatestComicNumber() {
             latestComicNumber = comic.num;
         });
 }
-//const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 function getComic(comicNumber, numOfComicsDisplayed, number) {
     //const number = comicNumber % numOfComicsDisplayed;
@@ -141,7 +160,6 @@ function getComic(comicNumber, numOfComicsDisplayed, number) {
             }
         })
         .then((comic) => {
-            // console.log(comic);
             const comicRetrieved = document.querySelector(`.num${number}`);
             comicRetrieved.innerHTML = `<h5 class="mt-6 text-gray-900 text-sm font-medium">  ${comic.title} </h5>
       <h5>${comic.num}</h5>
@@ -159,4 +177,4 @@ function getComic(comicNumber, numOfComicsDisplayed, number) {
 
 }
 
-initComics(2, 3);
+initComics(2, 3); //first initial display of comics
