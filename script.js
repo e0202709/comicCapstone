@@ -178,7 +178,7 @@ function getComic(comicNumber, numOfComicsDisplayed, number) {
         .then((comic) => {
             const comicRetrieved = document.querySelector(`.num${number}`);
             comicRetrieved.innerHTML = `<h5 class="mt-6 text-gray-900 text-sm font-medium">  ${comic.title} </h5>
-      <h5>${comic.num}</h5>
+      <h5>${comic.num} out of ${latestComicNumber}</h5>
       <img class="resize${numOfComicsDisplayed} id=${number}"
         src="${comic.img}" style="" 
         onclick="onClick(this)" class="w3-hover-opacity"
