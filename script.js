@@ -2,7 +2,7 @@ let currentComicNumber = 0;
 let currentDisplay = 0;
 let latestComicNumber = 0;
 
-getLatestComicNumber();
+//getLatestComicNumber();
 
 const form = document.querySelector(`#myForm`);
 const comicNumToSearch = document.querySelector(`#input__field`);
@@ -151,13 +151,16 @@ async function initComics(comicNumber, comicsToShowAtATime) {
     }, 1000);
 }
 
-function getLatestComicNumber() {
+async function getLatestComicNumber() {
     const targetUrl = `https://intro-to-js-playground.vercel.app/api/xkcd-comics/?comic=latest`;
-    fetch(targetUrl)
-        .then((blob) => blob.json())
-        .then((comic) => {
-            latestComicNumber = comic.num;
-        });
+    const target = await fetch(targetUrl);
+    const comicResult = await target.json();
+    latestComicNumber = comicResult.num;
+    // fetch(targetUrl)
+    //     .then((blob) => blob.json())
+    //     .then((comic) => {
+    //         latestComicNumber = comic.num;
+    //     });
 }
 
 function getComic(comicNumber, numOfComicsDisplayed, number) {
@@ -193,4 +196,7 @@ function getComic(comicNumber, numOfComicsDisplayed, number) {
 
 }
 
-initComics(2, 3); //first initial display of comics
+window.onload = async () => {
+    await getLatestComicNumber();
+    initComics(2, 3); //first initial display of comics
+};
